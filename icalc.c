@@ -21,14 +21,13 @@ double complex calculate(struct LexemList *left, struct LexemList *right)
     struct LexemList *pos;
     // If an [left; right) sub-expression looks like ( sub-expr )
     pos = left;
-    int cnt = 0;
     while(pos->next != right)
     {
         pos = pos->next;
-        if(pos->value->type == T_LPARENT || pos->value->type == T_RPARENT) cnt++;
-        if(pos->next == right && left->value->type == T_LPARENT && pos->value->type == T_RPARENT && cnt == 1)
+        if(pos->next == right && left->value->type == T_LPARENT && pos->value->type == T_RPARENT)
         {
-            return calculate(left->next, pos);
+            double complex res = calculate(left->next, pos);
+            if(!isnan(res)) return res;
         }
     }
     if((pos = find_pos(left, right, '+')) != NULL)
