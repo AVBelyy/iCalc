@@ -3,16 +3,16 @@
 struct LexemList *find_pos(struct LexemList *left, struct LexemList *right, char op)
 {
     int balance = 0;
-    struct LexemList *pos = left;
+    struct LexemList *pos = left, *ans = NULL;
     while(pos->next != right)
     {
         struct Lexem *lex = pos->value;
         if(lex->type == T_LPARENT) balance++;
         if(lex->type == T_RPARENT) balance--;
-        if(lex->type == T_OP && lex->sval[0] == op && balance == 0) return pos;
+        if(lex->type == T_OP && lex->sval[0] == op && balance == 0) ans = pos;
         pos = pos->next;
     }
-    return NULL;
+    return ans;
 }
 
 double complex calculate(struct LexemList *left, struct LexemList *right)
