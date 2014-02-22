@@ -86,7 +86,7 @@ int lexer_read(int stop)
             if(prev == '-')
             {
                 // Maybe, it's an unary minus
-                if((in(cur, t_parent) || (cur >= '0' && cur <= '9') || (cur == '.') || (cur >= 'a' && cur <= 'z')) && (!lexemTail || (lexemTail->value->type != T_NUM && lexemTail->value->type != T_NAME)))
+                if((in(cur, t_parent) || (cur >= '0' && cur <= '9') || (cur == '.') || (cur >= 'a' && cur <= 'z')) && (!lexemTail || lexemTail->value->type == T_OP || lexemTail->value->type == T_LPARENT))
                 {
                     lex->sval[0] = '~';
                 }
