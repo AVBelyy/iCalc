@@ -3,16 +3,16 @@
 struct LexemList *find_pos(struct LexemList *left, struct LexemList *right, char op)
 {
     int balance = 0;
-    struct LexemList *pos = left, *ans = NULL;
-    while(pos->next != right)
+    struct LexemList *pos = right->prev, *ans = NULL;
+    while(pos != left)
     {
         struct Lexem *lex = pos->value;
         if(lex->type == T_LPARENT) balance++;
         if(lex->type == T_RPARENT) balance--;
-        if(lex->type == T_OP && lex->sval[0] == op && balance == 0) ans = pos;
-        pos = pos->next;
+        if(lex->type == T_OP && lex->sval[0] == op && balance == 0) return pos;
+        pos = pos->prev;
     }
-    return ans;
+    return NULL;
 }
 
 double complex calculate(struct LexemList *left, struct LexemList *right)
@@ -21,14 +21,10 @@ double complex calculate(struct LexemList *left, struct LexemList *right)
     struct LexemList *pos;
     // If an [left; right) sub-expression looks like ( sub-expr )
     pos = left;
-    while(pos->next != right)
+    if(left->value->type == T_LPARENT && right->prev->value->type == T_RPARENT)
     {
-        pos = pos->next;
-        if(pos->next == right && left->value->type == T_LPARENT && pos->value->type == T_RPARENT)
-        {
-            double complex res = calculate(left->next, pos);
-            if(!isnan(res)) return res;
-        }
+        double complex res = calculate(left->next, right->prev);
+        if(!isnan(res)) return res;
     }
     if((pos = find_pos(left, right, '+')) != NULL)
     {

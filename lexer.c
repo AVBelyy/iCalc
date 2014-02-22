@@ -35,8 +35,10 @@ void lexem_push(struct Lexem *val)
     if(lexemTail != NULL)
     {
         lexemTail->next = item;
+        item->prev = lexemTail;
     } else {
         lexemHead = item;
+        item->prev = NULL;
     }
     item->value = val;
     item->next = NULL;

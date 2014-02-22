@@ -15,6 +15,7 @@ struct LexemList
 {
     struct Lexem *value;
     struct LexemList *next;
+    struct LexemList *prev;
 };
 
 struct Lexem
