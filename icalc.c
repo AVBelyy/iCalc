@@ -20,7 +20,6 @@ double complex calculate(struct LexemList *left, struct LexemList *right)
     if(left == right) return 0.0 / 0.0;
     struct LexemList *pos;
     // If an [left; right) sub-expression looks like ( sub-expr )
-    pos = left;
     if(left->value->type == T_LPARENT && right->prev->value->type == T_RPARENT)
     {
         double complex res = calculate(left->next, right->prev);
@@ -81,21 +80,39 @@ double complex calculate(struct LexemList *left, struct LexemList *right)
     return 0.0 / 0.0;
 }
 
+void calc_free()
+{
+    struct LexemList *next;
+    while(lexemHead != NULL)
+    {
+        free(lexemHead->value);
+        next = lexemHead->next;
+        free(lexemHead);
+        lexemHead = next;
+    }
+    lexemTail = NULL;
+}
+
 int main()
 {
-    printf("> ");
-    if(lexer_read('\n') == 0)
+    while(1)
     {
-        double complex result = calculate(lexemHead, lexemTail);
-        if(isnan(result))
-        {
-            printf("Calculation error\n");
-            return 1;
-        } else {
-            printf("%.5lf + %.5lfi\n", creal(result), cimag(result));
+        printf("> ");
+        int lex_result = lexer_read('\n');
+        if(lex_result == 0) {
+            double complex result = calculate(lexemHead, lexemTail);
+            calc_free();
+            if(isnan(result))
+            {
+                printf("Calculation error\n");
+            } else {
+                printf("%.5lf + %.5lfi\n", creal(result), cimag(result));
+            }
+        } else if(lex_result == -1) {
+            // End of Line reached
+            printf("\n");
+            break;
         }
-        return 0;
-    } else {
-        return 1;
     }
+    return 0;
 }

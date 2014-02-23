@@ -69,7 +69,7 @@ int lexer_read(int stop)
     int prev, buflen;
     char buf[LEX_BUF_LENGTH];
     get();
-    while(cur != stop)
+    while(cur != stop && cur != EOF)
     {
         if(in(cur, t_whitespace))
         {
@@ -139,6 +139,7 @@ int lexer_read(int stop)
             }
         }
     }
+    if(cur == EOF) return -1;
     struct Lexem *lex = malloc(sizeof(struct Lexem));
     lex->type = T_STOP;
     lexem_push(lex);
