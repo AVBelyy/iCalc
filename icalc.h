@@ -39,3 +39,4 @@ struct LexemList *lexemHead, *lexemTail;
 int in(int, const char*);
 int lexer_read(int);
 void lexer_dbg_output();
+void lexer_flush(int);

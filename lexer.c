@@ -146,3 +146,11 @@ int lexer_read(int stop)
     lexem_push(lex);
     return 0;
 }
+
+void lexer_flush(int stop)
+{
+    while(cur != stop)
+    {
+        get();
+    }
+}

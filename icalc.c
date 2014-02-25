@@ -113,7 +113,7 @@ int main()
             printf("\n");
             break;
         }
-        fseek(stdin, 0, SEEK_END);
+        lexer_flush('\n');
     }
     return 0;
 }
