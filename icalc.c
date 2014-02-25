@@ -101,7 +101,6 @@ int main()
         int lex_result = lexer_read('\n');
         if(lex_result == 0) {
             double complex result = calculate(lexemHead, lexemTail);
-            calc_free();
             if(isnan(result))
             {
                 printf("Calculation error\n");
@@ -111,9 +110,11 @@ int main()
         } else if(lex_result == -1) {
             // End of Line reached
             printf("\n");
+            calc_free();
             break;
         }
         lexer_flush('\n');
+        calc_free();
     }
     return 0;
 }
