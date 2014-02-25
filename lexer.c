@@ -117,6 +117,7 @@ int lexer_read(int stop)
                 struct Lexem *lex = malloc(sizeof(struct Lexem));
                 lex->type = T_NAME;
                 strncpy(lex->sval, buf, buflen);
+                lex->sval[buflen] = '\0';
                 lexem_push(lex);
             } else {
                 buflen = 0;
