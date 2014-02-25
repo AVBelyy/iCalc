@@ -8,6 +8,8 @@
 #define TRUE 1
 #define FALSE 0
 
+#define ZERO (0+0*I)
+
 #define LEX_NAME_LENGTH 16
 #define LEX_BUF_LENGTH 256
 

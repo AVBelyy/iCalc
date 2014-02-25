@@ -23,28 +23,28 @@ double complex calculate(struct LexemList *left, struct LexemList *right)
     if(left->value->type == T_LPARENT && right->prev->value->type == T_RPARENT)
     {
         double complex res = calculate(left->next, right->prev);
-        if(!isnan(res)) return res;
+        if(!isnan(res)) return res + ZERO;
     }
     if((pos = find_pos(left, right, '+')) != NULL)
     {
-        return calculate(left, pos) + calculate(pos->next, right);
+        return calculate(left, pos) + calculate(pos->next, right) + ZERO;
     } else if((pos = find_pos(left, right, '-')) != NULL)
     {
-        return calculate(left, pos) - calculate(pos->next, right);
+        return calculate(left, pos) - calculate(pos->next, right) + ZERO;
     } else if((pos = find_pos(left, right, '*')) != NULL)
     {
-        return calculate(left, pos) * calculate(pos->next, right);
+        return calculate(left, pos) * calculate(pos->next, right) + ZERO;
     } else if((pos = find_pos(left, right, '/')) != NULL)
     {
-        return calculate(left, pos) / calculate(pos->next, right);
+        return calculate(left, pos) / calculate(pos->next, right) + ZERO;
     } else if((pos = find_pos(left, right, '^')) != NULL)
     {
-        return cpow(calculate(left, pos), calculate(pos->next, right));
+        return cpow(calculate(left, pos), calculate(pos->next, right)) + ZERO;
     } else if(left->next == right)
     {
         if(left->value->type == T_NUM)
         {
-            return left->value->nval;
+            return left->value->nval + ZERO;
         } else if(left->value->type == T_NAME)
         {
             if(strcmp(left->value->sval, "pi") == 0)
@@ -60,21 +60,21 @@ double complex calculate(struct LexemList *left, struct LexemList *right)
         }
     } else if(left->value->type == T_OP && left->value->sval[0] == '~')
     {
-        return (-1) * calculate(left->next, right);
+        return (-1) * calculate(left->next, right) + ZERO;
     } else if(left->value->type == T_NAME)
     {
         if(strcmp(left->value->sval, "sin") == 0)
         {
-            return csin(calculate(left->next, right));
+            return csin(calculate(left->next, right)) + ZERO;
         } else if(strcmp(left->value->sval, "cos") == 0)
         {
-            return ccos(calculate(left->next, right));
+            return ccos(calculate(left->next, right)) + ZERO;
         } else if(strcmp(left->value->sval, "exp") == 0)
         {
-            return cexp(calculate(left->next, right));
+            return cexp(calculate(left->next, right)) + ZERO;
         } else if(strcmp(left->value->sval, "sqrt") == 0)
         {
-            return csqrt(calculate(left->next, right));
+            return csqrt(calculate(left->next, right)) + ZERO;
         }
     }
     return 0.0 / 0.0;
