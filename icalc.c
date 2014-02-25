@@ -113,6 +113,7 @@ int main()
             printf("\n");
             break;
         }
+        fseek(stdin, 0, SEEK_END);
     }
     return 0;
 }
