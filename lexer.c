@@ -7,7 +7,7 @@ const char *t_parent = "()";
 
 int cur;
 
-extern struct LexemList *lexemHead, *lexemTail;
+struct LexemList *lexemHead, *lexemTail;
 
 void get()
 {

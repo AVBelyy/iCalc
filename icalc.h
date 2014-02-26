@@ -35,7 +35,7 @@ struct Lexem
     double nval;
 };
 
-struct LexemList *lexemHead, *lexemTail;
+extern struct LexemList *lexemHead, *lexemTail;
 
 int in(int, const char*);
 int lexer_read(int);
