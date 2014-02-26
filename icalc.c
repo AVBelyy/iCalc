@@ -9,7 +9,7 @@ enum direction
 struct LexemList *find_pos(struct LexemList *left, struct LexemList *right, enum direction dir, char op)
 {
     int balance = 0;
-    struct LexemList *pos = dir == LEFT ? left : right->prev, *stop = dir == LEFT ? right->prev : left, *ans = NULL;
+    struct LexemList *pos = dir == LEFT ? left : right->prev, *stop = dir == LEFT ? right->prev : left;
     while(pos != stop)
     {
         struct Lexem *lex = pos->value;

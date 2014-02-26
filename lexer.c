@@ -35,7 +35,7 @@ int lex_error()
 
 void lexem_push(struct Lexem *val)
 {
-    struct LexemList *item = malloc(sizeof(struct LexemList));
+    struct LexemList *item = (struct LexemList *)malloc(sizeof(struct LexemList));
     if(lexemTail != NULL)
     {
         lexemTail->next = item;
@@ -49,7 +49,7 @@ void lexem_push(struct Lexem *val)
     lexemTail = item;
 }
 
-void lexer_dbg_output()
+void lexer_dbg_output(void)
 {
     struct LexemList *item = lexemHead;
     while(item != NULL)
@@ -80,7 +80,7 @@ int lexer_read(int stop)
             // Ignore whitespaces
             get();
         } else if(in(cur, t_op)) {
-            struct Lexem *lex = malloc(sizeof(struct Lexem));
+            struct Lexem *lex = (struct Lexem *)malloc(sizeof(struct Lexem));
             lex->type = T_OP;
             lex->sval[0] = cur;
             lex->sval[1] = '\0';
@@ -97,12 +97,12 @@ int lexer_read(int stop)
             }
             lexem_push(lex);
         } else if(cur == t_parent[0]) {
-            struct Lexem *lex = malloc(sizeof(struct Lexem));
+            struct Lexem *lex = (struct Lexem *)malloc(sizeof(struct Lexem));
             lex->type = T_LPARENT;
             lexem_push(lex);
             get();
         } else if(cur == t_parent[1]) {
-            struct Lexem *lex = malloc(sizeof(struct Lexem));
+            struct Lexem *lex = (struct Lexem *)malloc(sizeof(struct Lexem));
             lex->type = T_RPARENT;
             lexem_push(lex);
             get();
@@ -118,7 +118,7 @@ int lexer_read(int stop)
             }
             if(buflen != 0)
             {
-                struct Lexem *lex = malloc(sizeof(struct Lexem));
+                struct Lexem *lex = (struct Lexem *)malloc(sizeof(struct Lexem));
                 lex->type = T_NAME;
                 strncpy(lex->sval, buf, buflen);
                 lex->sval[buflen] = '\0';
@@ -133,7 +133,7 @@ int lexer_read(int stop)
                 }
                 if(buflen != 0)
                 {
-                    struct Lexem *lex = malloc(sizeof(struct Lexem));
+                    struct Lexem *lex = (struct Lexem *)malloc(sizeof(struct Lexem));
                     lex->type = T_NUM;
                     buf[buflen] = '\0';
                     sscanf(buf, "%lf", &lex->nval);
@@ -145,7 +145,7 @@ int lexer_read(int stop)
         }
     }
     if(cur == EOF) return -1;
-    struct Lexem *lex = malloc(sizeof(struct Lexem));
+    struct Lexem *lex = (struct Lexem *)malloc(sizeof(struct Lexem));
     lex->type = T_STOP;
     lexem_push(lex);
     return 0;
