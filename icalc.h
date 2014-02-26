@@ -22,7 +22,8 @@ struct LexemList
 
 struct Lexem
 {
-    enum {
+    enum
+    {
         T_OP,
         T_NUM,
         T_NAME,

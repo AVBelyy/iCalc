@@ -1,23 +1,29 @@
 #include "icalc.h"
 
-struct LexemList *find_pos(struct LexemList *left, struct LexemList *right, char op)
+enum direction
+{
+    LEFT,
+    RIGHT
+};
+
+struct LexemList *find_pos(struct LexemList *left, struct LexemList *right, enum direction dir, char op)
 {
     int balance = 0;
-    struct LexemList *pos = right->prev, *ans = NULL;
-    while(pos != left)
+    struct LexemList *pos = dir == LEFT ? left : right->prev, *stop = dir == LEFT ? right->prev : left, *ans = NULL;
+    while(pos != stop)
     {
         struct Lexem *lex = pos->value;
         if(lex->type == T_LPARENT) balance++;
         if(lex->type == T_RPARENT) balance--;
         if(lex->type == T_OP && lex->sval[0] == op && balance == 0) return pos;
-        pos = pos->prev;
+        pos = dir == LEFT ? pos->next : pos->prev;
     }
     return NULL;
 }
 
 double complex calculate(struct LexemList *left, struct LexemList *right)
 {
-    if(left == right) return 0.0 / 0.0;
+    if(left == right) return NAN;
     struct LexemList *pos;
     // If an [left; right) sub-expression looks like ( sub-expr )
     if(left->value->type == T_LPARENT && right->prev->value->type == T_RPARENT)
@@ -25,19 +31,19 @@ double complex calculate(struct LexemList *left, struct LexemList *right)
         double complex res = calculate(left->next, right->prev);
         if(!isnan(res)) return res + ZERO;
     }
-    if((pos = find_pos(left, right, '+')) != NULL)
+    if((pos = find_pos(left, right, RIGHT, '+')) != NULL)
     {
         return calculate(left, pos) + calculate(pos->next, right) + ZERO;
-    } else if((pos = find_pos(left, right, '-')) != NULL)
+    } else if((pos = find_pos(left, right, RIGHT, '-')) != NULL)
     {
         return calculate(left, pos) - calculate(pos->next, right) + ZERO;
-    } else if((pos = find_pos(left, right, '*')) != NULL)
+    } else if((pos = find_pos(left, right, RIGHT, '*')) != NULL)
     {
         return calculate(left, pos) * calculate(pos->next, right) + ZERO;
-    } else if((pos = find_pos(left, right, '/')) != NULL)
+    } else if((pos = find_pos(left, right, RIGHT, '/')) != NULL)
     {
         return calculate(left, pos) / calculate(pos->next, right) + ZERO;
-    } else if((pos = find_pos(left, right, '^')) != NULL)
+    } else if((pos = find_pos(left, right, LEFT, '^')) != NULL)
     {
         return cpow(calculate(left, pos), calculate(pos->next, right)) + ZERO;
     } else if(left->next == right)
@@ -77,7 +83,7 @@ double complex calculate(struct LexemList *left, struct LexemList *right)
             return csqrt(calculate(left->next, right)) + ZERO;
         }
     }
-    return 0.0 / 0.0;
+    return NAN;
 }
 
 void calc_free()
